@@ -4,7 +4,10 @@ version="0.1.0"
 description="A game utility tool library"
 readme="README.md"
 requires-python=">=3.12"
-dependencies=[]
+dependencies = [
+    "pytesseract>=0.3.10",
+    "Pillow>=10.0.0",
+]
 
 [build-system]
 requires = ["hatchling"]
