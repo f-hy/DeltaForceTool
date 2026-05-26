@@ -10,6 +10,9 @@ def test_load_app_settings_uses_config_file(tmp_path) -> None:
     json.dumps({
       "hotkeys": {
         "ocr_trigger": "alt+x",
+        "mean_calculate": "alt+m",
+        "workflow_record": "alt+r",
+        "workflow_run": "alt+p",
         "exit": "ctrl+shift+q"},
       "ocr_settings": {
         "overlay_alpha": 0.5,
@@ -22,6 +25,9 @@ def test_load_app_settings_uses_config_file(tmp_path) -> None:
   settings = load_app_settings(config_path)
 
   assert settings.hotkeys.ocr_trigger == "alt+x"
+  assert settings.hotkeys.mean_calculate == "alt+m"
+  assert settings.hotkeys.workflow_record == "alt+r"
+  assert settings.hotkeys.workflow_run == "alt+p"
   assert settings.hotkeys.exit == "ctrl+shift+q"
   assert settings.ocr.overlay_alpha == 0.5
   assert settings.ocr.rect_color == "#112233"

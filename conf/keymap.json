@@ -1,6 +1,9 @@
 {
     "hotkeys": {
         "ocr_trigger": "alt+s",
+        "mean_calculate": "alt+m",
+        "workflow_record": "alt+r",
+        "workflow_run": "alt+p",
         "exit": "ctrl+alt+q"
     },
     "ocr_settings": {

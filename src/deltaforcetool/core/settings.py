@@ -11,6 +11,9 @@ class HotkeySettings:
   """Hotkey bindings for the application."""
 
   ocr_trigger: str = "alt+s"
+  mean_calculate: str = "alt+m"
+  workflow_record: str = "alt+r"
+  workflow_run: str = "alt+p"
   exit: str = "ctrl+alt+q"
 @dataclass(frozen=True)
 class OCRSettings:
@@ -45,6 +48,9 @@ def load_app_settings(config_path: Path | None = None) -> AppSettings:
   return AppSettings(
     hotkeys=HotkeySettings(
       ocr_trigger=hotkey_data.get("ocr_trigger", "alt+s"),
+      mean_calculate=hotkey_data.get("mean_calculate", "alt+m"),
+      workflow_record=hotkey_data.get("workflow_record", "alt+r"),
+      workflow_run=hotkey_data.get("workflow_run", "alt+p"),
       exit=hotkey_data.get("exit", "ctrl+alt+q"),
     ),
     ocr=OCRSettings(

@@ -7,9 +7,11 @@ from dataclasses import dataclass
 from typing import Protocol
 
 import tkinter as tk
+from tkinter import filedialog
 
 from deltaforcetool.core.settings import AppSettings, load_app_settings
 from deltaforcetool.infrastructure.hotkeys import GlobalHotkeyManager
+from deltaforcetool.tools.mean.mean_tool import MeanTool
 from deltaforcetool.tools.ocr.ocr_tool import OCRTool
 class Notifier(Protocol):
   """Notification sink for workflow feedback."""
@@ -74,7 +76,10 @@ class DeltaForceApp:
 
     hotkey_label = tk.Label(
       root,
-      text=f"OCR: {self.settings.hotkeys.ocr_trigger.upper()}",
+      text=(f"OCR: {self.settings.hotkeys.ocr_trigger.upper()}\n"
+            f"Mean: {self.settings.hotkeys.mean_calculate.upper()}\n"
+            f"Record: {self.settings.hotkeys.workflow_record.upper()}\n"
+            f"Run: {self.settings.hotkeys.workflow_run.upper()}"),
       font=("Consolas", 10),
     )
     hotkey_label.pack()
@@ -88,10 +93,19 @@ class DeltaForceApp:
 
   def _register_hotkeys(self) -> None:
     ocr_registered = self.hotkeys.register(self.settings.hotkeys.ocr_trigger, self.request_ocr)
+    mean_registered = self.hotkeys.register(self.settings.hotkeys.mean_calculate, self.request_mean)
+    record_registered = self.hotkeys.register(self.settings.hotkeys.workflow_record, self.request_record_workflow)
+    run_registered = self.hotkeys.register(self.settings.hotkeys.workflow_run, self.request_run_workflow)
     exit_registered = self.hotkeys.register(self.settings.hotkeys.exit, self.request_exit)
 
     if not ocr_registered:
       self.notifier.warning(f"OCR hotkey '{self.settings.hotkeys.ocr_trigger}' could not be registered")
+    if not mean_registered:
+      self.notifier.warning(f"Mean hotkey '{self.settings.hotkeys.mean_calculate}' could not be registered")
+    if not record_registered:
+      self.notifier.warning(f"Record hotkey '{self.settings.hotkeys.workflow_record}' could not be registered")
+    if not run_registered:
+      self.notifier.warning(f"Run hotkey '{self.settings.hotkeys.workflow_run}' could not be registered")
     if not exit_registered:
       self.notifier.warning(f"Exit hotkey '{self.settings.hotkeys.exit}' could not be registered")
 
@@ -108,6 +122,59 @@ class DeltaForceApp:
 
     self.notifier.info("OCR workflow triggered")
     OCRTool().run_as_overlay(self._root)
+
+  def request_mean(self) -> None:
+    """Schedule mean calculation prompt on Tk thread."""
+    if self._root is None:
+      return
+    self._root.after(0, self._launch_mean_dialog)
+
+  def _launch_mean_dialog(self) -> None:
+    """Prompt for x and show latest OCR mean result."""
+    self.notifier.info("Mean calculation triggered")
+    MeanTool().run()
+
+  def request_record_workflow(self) -> None:
+    """Launch GUI recorder overlay on the Tk thread."""
+    if self._root is None:
+      return
+
+    def _launch():
+      try:
+        from deltaforcetool.automation import launch_recorder_overlay
+
+        launch_recorder_overlay()
+        self.notifier.info("Recorder finished")
+      except Exception as exc:
+        self.notifier.error(f"Recorder failed: {exc}")
+
+    self._root.after(0, _launch)
+
+  def request_run_workflow(self) -> None:
+    """Prompt for a workflow file and run it once."""
+    if self._root is None:
+      return
+    self._root.after(0, self._prompt_and_run_workflow)
+
+  def _prompt_and_run_workflow(self) -> None:
+    """Prompt file path and dispatch workflow execution."""
+    from deltaforcetool.app.cli import run_workflow_file
+
+    if self._root is None:
+      return
+
+    selected = filedialog.askopenfilename(
+      title="Select workflow JSON",
+      filetypes=[("Workflow JSON", "*.json"), ("All files", "*.*")],
+    )
+    if not selected:
+      return
+
+    try:
+      run_workflow_file(selected)
+      self.notifier.info(f"Workflow finished: {selected}")
+    except Exception as exc:
+      self.notifier.error(f"Workflow failed: {exc}")
 
   def request_exit(self) -> None:
     """Schedule a safe shutdown on the Tk thread."""

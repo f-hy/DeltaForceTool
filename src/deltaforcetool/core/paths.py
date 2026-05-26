@@ -13,6 +13,8 @@ class ProjectPaths:
   data: Path
   tmp: Path
   models: Path
+  inst: Path
+  match_materials: Path
   ocr_output: Path
 
   def ensure_data_dirs(self) -> None:
@@ -20,6 +22,8 @@ class ProjectPaths:
     self.data.mkdir(parents=True, exist_ok=True)
     self.tmp.mkdir(parents=True, exist_ok=True)
     self.models.mkdir(parents=True, exist_ok=True)
+    self.inst.mkdir(parents=True, exist_ok=True)
+    self.match_materials.mkdir(parents=True, exist_ok=True)
 @lru_cache(maxsize=1)
 def get_project_paths() -> ProjectPaths:
   """Return the cached project paths."""
@@ -35,5 +39,7 @@ def get_project_paths() -> ProjectPaths:
     data=data,
     tmp=data / "tmp",
     models=data / "models",
+    inst=data / "inst",
+    match_materials=data / "matchMaterials",
     ocr_output=data / "ocr.out",
   )

@@ -10,4 +10,6 @@ def test_project_paths_point_to_repo_root() -> None:
   assert paths.data == paths.root / "data"
   assert paths.tmp == paths.data / "tmp"
   assert paths.models == paths.data / "models"
+  assert paths.inst == paths.data / "inst"
+  assert paths.match_materials == paths.data / "matchMaterials"
   assert paths.ocr_output == paths.data / "ocr.out"
