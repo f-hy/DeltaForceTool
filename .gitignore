@@ -17,3 +17,5 @@ wheels/
 CLAUDE.md
 .claudeignore
 docs/superpowers
+data/
+memory/

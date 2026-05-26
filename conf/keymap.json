@@ -1,0 +1,12 @@
+{
+    "hotkeys": {
+        "ocr_trigger": "alt+s",
+        "exit": "ctrl+alt+q"
+    },
+    "ocr_settings": {
+        "overlay_alpha": 0.7,
+        "rect_color": "#00ff00",
+        "rect_width": 3,
+        "rect_dash": [4, 2]
+    }
+}

@@ -7,6 +7,11 @@ requires-python=">=3.12"
 dependencies = [
     "pytesseract>=0.3.10",
     "Pillow>=10.0.0",
+    "keyboard>=0.13.5",
+    "ipykernel>=7.2.0",
+    "yapf>=0.43.0",
+    "pre-commit>=4.6.0",
+    "toml>=0.10.2",
 ]
 
 [build-system]
