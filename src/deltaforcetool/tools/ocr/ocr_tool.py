@@ -1,7 +1,6 @@
 # src/deltaforcetool/tools/ocr/ocr_tool.py
 """OCR Tool implementation with Tkinter overlay UI."""
 
-from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Tuple
 
 if TYPE_CHECKING:
@@ -10,6 +9,7 @@ if TYPE_CHECKING:
 from PIL import ImageGrab
 
 from deltaforcetool.core.base import ITool
+from deltaforcetool.core.paths import get_project_paths
 from deltaforcetool.tools.ocr.float_detector import FloatDetector
 class OCRTool(ITool):
   """OCR tool for float number detection with rectangle selection.
@@ -33,11 +33,11 @@ class OCRTool(ITool):
       return
     self._initialized = True
     self._running = False
-    self._detector = FloatDetector()
-    # Get project root
-    project_root = Path(__file__).resolve().parents[4]
-    self._screenshot_path = project_root / "data" / "tmp" / "freeze_temp.png"
-    self._output_file = project_root / "data" / "ocr.out"
+    self._paths = get_project_paths()
+    self._paths.ensure_data_dirs()
+    self._detector = FloatDetector(model_dir=self._paths.models)
+    self._screenshot_path = self._paths.tmp / "freeze_temp.png"
+    self._output_file = self._paths.ocr_output
     self._parent_root = None # Parent Tk root window
 
   def run(self) -> None:

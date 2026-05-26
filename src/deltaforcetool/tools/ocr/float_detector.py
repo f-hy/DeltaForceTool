@@ -8,6 +8,8 @@ from typing import List, Optional, Tuple
 
 import pytesseract
 from PIL import Image
+
+from deltaforcetool.core.paths import get_project_paths
 @dataclass
 class DetectionResult:
   """Represents a detected float number."""
@@ -29,11 +31,11 @@ class FloatDetector:
         Args:
             model_dir: Optional path to model directory for custom models
         """
-    # Get project root - it's the parent of src/deltaforcetool
-    project_root = Path(__file__).resolve().parents[4]
-    self.model_dir = model_dir or project_root / "data" / "models"
-    self.data_dir = project_root / "data"
-    self.output_file = self.data_dir / "ocr.out"
+    paths = get_project_paths()
+    paths.ensure_data_dirs()
+    self.model_dir = model_dir or paths.models
+    self.data_dir = paths.data
+    self.output_file = paths.ocr_output
 
     # Configure Tesseract path for Windows
     import platform
@@ -98,9 +100,7 @@ class FloatDetector:
       pixels = list(inverted.getdata())
       if not pixels:
         print("No pixels in image")
-        self._cleanup_selection()
-        self.stop()
-        return
+        return []
 
       # Calculate statistics
       min_val = min(pixels)
