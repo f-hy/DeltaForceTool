@@ -3,5 +3,4 @@
 
 from .float_detector import FloatDetector
 from .ocr_tool import OCRTool
-
 __all__ = ["FloatDetector", "OCRTool"]

@@ -4,5 +4,5 @@ repos:
     hooks:
       - id: yapf
         additional_dependencies: ['toml']
-        args: ["--style", ".f/.style.yapf"]
-        files: \.(py|ipynb)$
+        args: ["-i", "--style", "./.f/.style.yapf"]
+        files: '\.py$'

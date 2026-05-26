@@ -6,15 +6,13 @@ __version__ = "0.1.0"
 from .core import ITool, ToolRegistry
 from .utils.time import TimeClock, TimeConfig, TimeEvent, TimeClockUI
 from .tools.ocr import FloatDetector, OCRTool
-
 __all__ = [
-    "ITool",
-    "ToolRegistry",
-    "TimeClock",
-    "TimeConfig",
-    "TimeEvent",
-    "TimeClockUI",
-    "FloatDetector",
-    "OCRTool",
-    "__version__",
-]
+  "ITool",
+  "ToolRegistry",
+  "TimeClock",
+  "TimeConfig",
+  "TimeEvent",
+  "TimeClockUI",
+  "FloatDetector",
+  "OCRTool",
+  "__version__", ]

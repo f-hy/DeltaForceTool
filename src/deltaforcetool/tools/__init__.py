@@ -2,5 +2,4 @@
 """Tools package for DeltaForceTool extensions."""
 
 from .ocr import FloatDetector, OCRTool
-
 __all__ = ["FloatDetector", "OCRTool"]
